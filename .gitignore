@@ -1,0 +1,26 @@
+node_modules/
+dist/
+build/
+.turbo/
+.wrangler/
+.dev.vars
+*.log
+.DS_Store
+tmp/
+coverage/
+
+# Android
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/app/release/
+*.keystore
+!debug.keystore
+.cxx/
+
+# iOS
+ios/Pods/
+ios/build/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/

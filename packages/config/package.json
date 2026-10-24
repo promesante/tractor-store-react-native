@@ -1,0 +1,23 @@
+{
+  "name": "@tractor/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint.js",
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/react-native.json": "./tsconfig/react-native.json"
+  },
+  "dependencies": {
+    "@eslint/js": "catalog:",
+    "typescript-eslint": "catalog:"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  },
+  "devDependencies": {
+    "eslint": "catalog:",
+    "typescript": "catalog:"
+  }
+}

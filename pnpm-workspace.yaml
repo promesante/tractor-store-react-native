@@ -1,0 +1,19 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+  - "e2e"
+
+# React Native's Gradle build and Re.Pack resolve packages from a flat node_modules.
+nodeLinker: hoisted
+
+# One version per dependency across the workspace. Module Federation singletons
+# (react, react-native, Gluestack and friends) are added here in T2, pinned exactly,
+# because a mismatch between host and remotes crashes at runtime.
+catalog:
+  "@eslint/js": 10.0.1
+  eslint: 10.13.0
+  prettier: 3.9.10
+  turbo: 2.11.10
+  typescript: 5.9.3
+  typescript-eslint: 8.72.0
+  vitest: 5.0.5

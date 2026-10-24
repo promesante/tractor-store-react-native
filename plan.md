@@ -10,25 +10,25 @@ Tasks for building the store described in [spec.md](./spec.md).
 
 ## Status
 
-| Task | Title                                             | Depends on  | Status  |
-| ---- | ------------------------------------------------- | ----------- | ------- |
-| T0   | Spec and plan                                     | none        | Done    |
-| T1   | Monorepo scaffold and CI                          | T0          | Todo    |
-| T2   | Spike: Re.Pack Module Federation with Gluestack   | T1          | Todo    |
-| T3   | Host app: navigation, remote loading, fallbacks   | T2          | Todo    |
-| T4   | Cloudflare Workers and deploy workflow            | T3          | Todo    |
-| T5   | Shared UI: theme, Button, Boundary toggle         | T3          | Todo    |
-| T6   | Assets: images, fonts and data per team           | T4          | Todo    |
-| T7   | Explore: screens, header and footer               | T5, T6      | Todo    |
-| T8   | Explore widgets: recommendations and store picker | T7          | Todo    |
-| T9   | Checkout: cart state, add to cart, mini cart      | T5, T6      | Todo    |
-| T10  | Decide: product screen                            | T8, T9      | Todo    |
-| T11  | Checkout: cart, checkout and thank-you screens    | T8, T9      | Todo    |
-| T12  | End-to-end tests in CI                            | T10, T11    | Todo    |
-| T13  | Bonus: Inspire team owns recommendations          | T12         | Todo    |
-| T14  | Docs: README, specs table, footer credits         | T12         | Todo    |
-| T15  | Submit to the Tractor Store site                  | T14         | Todo    |
-| T16  | iOS build                                         | T12         | Todo    |
+| Task | Title                                             | Depends on | Status |
+| ---- | ------------------------------------------------- | ---------- | ------ |
+| T0   | Spec and plan                                     | none       | Done   |
+| T1   | Monorepo scaffold and CI                          | T0         | Review |
+| T2   | Spike: Re.Pack Module Federation with Gluestack   | T1         | Todo   |
+| T3   | Host app: navigation, remote loading, fallbacks   | T2         | Todo   |
+| T4   | Cloudflare Workers and deploy workflow            | T3         | Todo   |
+| T5   | Shared UI: theme, Button, Boundary toggle         | T3         | Todo   |
+| T6   | Assets: images, fonts and data per team           | T4         | Todo   |
+| T7   | Explore: screens, header and footer               | T5, T6     | Todo   |
+| T8   | Explore widgets: recommendations and store picker | T7         | Todo   |
+| T9   | Checkout: cart state, add to cart, mini cart      | T5, T6     | Todo   |
+| T10  | Decide: product screen                            | T8, T9     | Todo   |
+| T11  | Checkout: cart, checkout and thank-you screens    | T8, T9     | Todo   |
+| T12  | End-to-end tests in CI                            | T10, T11   | Todo   |
+| T13  | Bonus: Inspire team owns recommendations          | T12        | Todo   |
+| T14  | Docs: README, specs table, footer credits         | T12        | Todo   |
+| T15  | Submit to the Tractor Store site                  | T14        | Todo   |
+| T16  | iOS build                                         | T12        | Todo   |
 
 ## Phase 0: Foundation
 
@@ -42,10 +42,14 @@ Tasks for building the store described in [spec.md](./spec.md).
 
 - pnpm workspaces and Turborepo with `build`, `dev`, `lint`, `typecheck`, `test` pipelines.
 - pnpm configured for React Native: hoisted node linker.
-- A workspace catalog that pins the exact versions of every shared singleton.
+- A workspace catalog that pins exact versions. T2 adds the shared singletons once the spike
+  settles their versions.
 - `packages/config` with the shared TypeScript and ESLint config. Prettier at the root.
 - `.github/workflows/ci.yml` runs lint, typecheck and test on every PR.
 - Node pinned with `.nvmrc`, pnpm pinned with `packageManager`, Java 17 noted for Android.
+- `packages/events` with the typed event bus and its unit tests, so the pipelines have code to
+  check. T2 shares it between host and remotes.
+- TypeScript stays on 5.9: typescript-eslint does not support TypeScript 7 yet.
 
 **Done when** `pnpm install`, `pnpm lint`, `pnpm typecheck` and `pnpm test` pass locally and in CI.
 
