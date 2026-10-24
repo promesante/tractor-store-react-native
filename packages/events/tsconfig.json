@@ -1,0 +1,4 @@
+{
+  "extends": "@tractor/config/tsconfig/base.json",
+  "include": ["src"]
+}

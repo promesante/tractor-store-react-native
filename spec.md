@@ -34,15 +34,15 @@ The task plan lives in [plan.md](./plan.md).
 
 ### 2.1 Features every implementation must have
 
-| Feature                                                                          | Owner             | Task        |
-| -------------------------------------------------------------------------------- | ----------------- | ----------- |
-| Boundary toggle, to show which team owns what                                    | Shell             | T5          |
-| Complete shop: home, category, stores, product detail, cart, checkout, thank-you | All teams         | T7 to T11   |
-| Header and footer, the same on every screen except checkout                      | Explore           | T7          |
-| Recommendations matched by color, from the selected product and cart contents    | Explore, later Inspire | T8, T13 |
-| Shopping cart: add and remove tractors, mini cart updates                        | Checkout          | T9, T11     |
-| Checkout form with an embedded store picker owned by Explore                     | Checkout, Explore | T8, T11     |
-| Confirmation confetti, powered by an external dependency                         | Checkout          | T11         |
+| Feature                                                                          | Owner                  | Task      |
+| -------------------------------------------------------------------------------- | ---------------------- | --------- |
+| Boundary toggle, to show which team owns what                                    | Shell                  | T5        |
+| Complete shop: home, category, stores, product detail, cart, checkout, thank-you | All teams              | T7 to T11 |
+| Header and footer, the same on every screen except checkout                      | Explore                | T7        |
+| Recommendations matched by color, from the selected product and cart contents    | Explore, later Inspire | T8, T13   |
+| Shopping cart: add and remove tractors, mini cart updates                        | Checkout               | T9, T11   |
+| Checkout form with an embedded store picker owned by Explore                     | Checkout, Explore      | T8, T11   |
+| Confirmation confetti, powered by an external dependency                         | Checkout               | T11       |
 
 ### 2.2 Principles every implementation must follow
 
@@ -58,31 +58,31 @@ The task plan lives in [plan.md](./plan.md).
 
 ## 3. Reference implementations
 
-| Reference                 | What we reuse                                                                                     | What we do differently                                                          |
-| ------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| Reference                 | What we reuse                                                                                       | What we do differently                                                                  |
+| ------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
 | `tractor-store-react`     | Team split, Module Federation composition, routes exposed per team, per-team `db.json`, event names | Native screens instead of DOM; Re.Pack instead of webpack; cart persisted on the device |
-| `tractor-store-blueprint` | Data, images, fonts, team colors, the color-distance recommendation algorithm                     | Mobile layout instead of the web CSS                                            |
-| `tractor-store-qwik`      | Monorepo tooling, Cloudflare Workers hosting, PR-per-task workflow, spike-first plan              | No server rendering                                                             |
+| `tractor-store-blueprint` | Data, images, fonts, team colors, the color-distance recommendation algorithm                       | Mobile layout instead of the web CSS                                                    |
+| `tractor-store-qwik`      | Monorepo tooling, Cloudflare Workers hosting, PR-per-task workflow, spike-first plan                | No server rendering                                                                     |
 
 ## 4. Decisions
 
-| Aspect                  | Decision                                                                                       |
-| ----------------------- | ---------------------------------------------------------------------------------------------- |
-| Framework               | React Native, bare workflow (no Expo). The exact version is pinned in the spike to one Re.Pack supports. |
-| Bundler                 | Re.Pack 5 with Rspack, replacing Metro                                                         |
-| Micro frontends         | Module Federation 2 (`@module-federation/enhanced`) through Re.Pack                            |
-| Application shell       | A thin host app: navigation container, remote loading, boundary toggle, providers               |
-| Integration             | Host loads remotes at runtime. Each remote exposes its screens and widgets.                    |
-| Navigation              | React Navigation native stack in the host. Each team exports its screen list, like the sister project's routes. |
-| Communication           | Typed event bus in `packages/events`, plus props from parent to child widget                    |
-| UI library              | Gluestack UI with NativeWind, as shared singletons provided by the host                         |
-| Design system           | Shared Button in `packages/ui`, built on Gluestack                                              |
-| Cart state              | Owned by Checkout, persisted with AsyncStorage                                                  |
-| Platforms               | Android first. The code stays cross-platform, and iOS is a later task.                           |
-| UI fidelity             | Mobile-adapted: same screens, data, images and team colors, in mobile idioms                     |
-| Monorepo                | Turborepo with pnpm workspaces                                                                  |
-| Hosting                 | Cloudflare Workers with Static Assets, one Worker per team. Cloudflare Pages is in maintenance mode. |
-| CI/CD                   | GitHub Actions: checks on every PR. On merge to `main`, deploy the changed remotes and build the host APK as an artifact. |
+| Aspect            | Decision                                                                                                                  |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Framework         | React Native, bare workflow (no Expo). The exact version is pinned in the spike to one Re.Pack supports.                  |
+| Bundler           | Re.Pack 5 with Rspack, replacing Metro                                                                                    |
+| Micro frontends   | Module Federation 2 (`@module-federation/enhanced`) through Re.Pack                                                       |
+| Application shell | A thin host app: navigation container, remote loading, boundary toggle, providers                                         |
+| Integration       | Host loads remotes at runtime. Each remote exposes its screens and widgets.                                               |
+| Navigation        | React Navigation native stack in the host. Each team exports its screen list, like the sister project's routes.           |
+| Communication     | Typed event bus in `packages/events`, plus props from parent to child widget                                              |
+| UI library        | Gluestack UI with NativeWind, as shared singletons provided by the host                                                   |
+| Design system     | Shared Button in `packages/ui`, built on Gluestack                                                                        |
+| Cart state        | Owned by Checkout, persisted with AsyncStorage                                                                            |
+| Platforms         | Android first. The code stays cross-platform, and iOS is a later task.                                                    |
+| UI fidelity       | Mobile-adapted: same screens, data, images and team colors, in mobile idioms                                              |
+| Monorepo          | Turborepo with pnpm workspaces                                                                                            |
+| Hosting           | Cloudflare Workers with Static Assets, one Worker per team. Cloudflare Pages is in maintenance mode.                      |
+| CI/CD             | GitHub Actions: checks on every PR. On merge to `main`, deploy the changed remotes and build the host APK as an artifact. |
 
 ## 5. System boundaries
 
@@ -111,12 +111,12 @@ The task plan lives in [plan.md](./plan.md).
 
 ### 6.1 Deployables
 
-| Deployable         | What it is                                                                     | Where it runs                                     |
-| ------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------- |
-| `apps/host`        | The Android app. Native code, shared libraries, navigation, remote loading.   | Installed APK, built in CI                         |
-| `apps/explore`     | Remote bundle with Explore's screens and widgets, plus its images              | `tractor-explore` Worker, Static Assets            |
-| `apps/decide`      | Remote bundle with the product screen                                          | `tractor-decide` Worker, Static Assets             |
-| `apps/checkout`    | Remote bundle with Checkout's screens and widgets                              | `tractor-checkout` Worker, Static Assets           |
+| Deployable      | What it is                                                                  | Where it runs                            |
+| --------------- | --------------------------------------------------------------------------- | ---------------------------------------- |
+| `apps/host`     | The Android app. Native code, shared libraries, navigation, remote loading. | Installed APK, built in CI               |
+| `apps/explore`  | Remote bundle with Explore's screens and widgets, plus its images           | `tractor-explore` Worker, Static Assets  |
+| `apps/decide`   | Remote bundle with the product screen                                       | `tractor-decide` Worker, Static Assets   |
+| `apps/checkout` | Remote bundle with Checkout's screens and widgets                           | `tractor-checkout` Worker, Static Assets |
 
 Each team Worker serves `mf-manifest.json`, its bundles and its images. It needs a public
 `workers.dev` URL, because the app fetches from it directly.
@@ -143,12 +143,12 @@ goes into the host first.
 All remotes share one JS runtime, so the sister project's `window` custom events become a typed
 event bus.
 
-| Concept                                   | tractor-store-react      | This implementation                                          |
-| ----------------------------------------- | ------------------------ | ------------------------------------------------------------ |
-| Parent to child: variant change           | Route param `?sku=`      | Product screen passes `sku` as a prop to its widgets         |
-| Sibling: add to cart to mini cart         | `add-to-cart`, `updated-cart` events | `checkout:cart-updated` on the bus. Mini cart rereads the cart. |
-| Child to parent: store picker to checkout | `selected-shop` event    | `explore:store-selected` on the bus, with the store id       |
-| Inter-team navigation                     | Links to URLs            | Navigation by route name. Each team documents its routes and params in `packages/events`. |
+| Concept                                   | tractor-store-react                  | This implementation                                                                       |
+| ----------------------------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------- |
+| Parent to child: variant change           | Route param `?sku=`                  | Product screen passes `sku` as a prop to its widgets                                      |
+| Sibling: add to cart to mini cart         | `add-to-cart`, `updated-cart` events | `checkout:cart-updated` on the bus. Mini cart rereads the cart.                           |
+| Child to parent: store picker to checkout | `selected-shop` event                | `explore:store-selected` on the bus, with the store id                                    |
+| Inter-team navigation                     | Links to URLs                        | Navigation by route name. Each team documents its routes and params in `packages/events`. |
 
 ### 6.5 State and data
 
@@ -204,20 +204,20 @@ docs/            spike findings
 
 ## 11. Risks
 
-| Risk                                                | Why it matters                                                        | Mitigation                                                     |
-| --------------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------- |
-| Re.Pack support for the latest React Native         | Re.Pack can lag behind React Native releases                           | Pick the newest version Re.Pack supports in the spike, and pin it |
-| NativeWind and Gluestack inside federated remotes   | Styles are compiled per bundle and must work in a remote               | Proved in the spike                                            |
-| Singleton version drift                             | A mismatch crashes at runtime                                         | Exact pins from the workspace catalog, checked in CI           |
-| Remote unavailable or slow on a phone network       | Screens wouldn't load                                                 | Error fallback with retry per remote. Cached bundles later if needed. |
-| No Xcode on the dev machine                         | iOS can't be built or tested locally                                   | Android first; iOS as a later task                             |
-| App store policy on downloaded code                 | Stores limit changing an app's purpose through downloaded code        | Allowed for this kind of JS update; noted in the README        |
+| Risk                                              | Why it matters                                                 | Mitigation                                                            |
+| ------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Re.Pack support for the latest React Native       | Re.Pack can lag behind React Native releases                   | Pick the newest version Re.Pack supports in the spike, and pin it     |
+| NativeWind and Gluestack inside federated remotes | Styles are compiled per bundle and must work in a remote       | Proved in the spike                                                   |
+| Singleton version drift                           | A mismatch crashes at runtime                                  | Exact pins from the workspace catalog, checked in CI                  |
+| Remote unavailable or slow on a phone network     | Screens wouldn't load                                          | Error fallback with retry per remote. Cached bundles later if needed. |
+| No Xcode on the dev machine                       | iOS can't be built or tested locally                           | Android first; iOS as a later task                                    |
+| App store policy on downloaded code               | Stores limit changing an app's purpose through downloaded code | Allowed for this kind of JS update; noted in the README               |
 
 ## 12. Publishing to the Tractor Store site
 
-| Step on the site                                            | How this project meets it                                                  |
-| ----------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Step on the site                                            | How this project meets it                                                                |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | Base the repository on an existing Tractor Store repository | Based on tractor-store-react and the blueprint's data and assets, credited in the README |
-| Implement every feature                                     | Section 2.1, tracked in [plan.md](./plan.md)                                |
-| Describe the implementation and fill out the specs table    | Task T14                                                                   |
+| Implement every feature                                     | Section 2.1, tracked in [plan.md](./plan.md)                                             |
+| Describe the implementation and fill out the specs table    | Task T14                                                                                 |
 | Submit with a repository link and a demo                    | Task T15. The demo is a downloadable APK from a GitHub Release, plus a screen recording. |
