@@ -64,8 +64,10 @@ the combination Re.Pack is tested with. All versions are pinned exactly in
    host's Module Federation runtime resolves it. Discovery for real builds comes in T3 and T4.
 7. **The monorepo needs a few adjustments for React Native.**
    - pnpm's hoisted node linker, because Gradle and Re.Pack expect a flat `node_modules`.
-   - `autoInstallPeers: false`, so web-only peers such as `react-native-web` stay out. Missing
-     web-only peers are listed in `peerDependencyRules.ignoreMissing`.
+   - `autoInstallPeers: false`, so web-only peers such as `react-native-web` stay out. Every
+     peer a package really needs must then be declared, for example `vite` for `vitest`. Peers
+     never used here, web-only ones and `webpack`, are listed in `peerDependencyRules.ignoreMissing`.
+     A machine with an older install can hide a missing peer: only a clean install shows it, as CI does.
    - The host's Gradle files point at the repo root's `node_modules`.
    - Remotes have no native folders. They are only JS bundles built by Re.Pack's dev server or
      `bundle` command.
