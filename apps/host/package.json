@@ -1,0 +1,45 @@
+{
+  "name": "@tractor/host",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "react-native start --port 8081",
+    "start": "react-native start --port 8081",
+    "lint": "eslint .",
+    "typecheck": "tsc -p .",
+    "android": "node scripts/adb-reverse.mjs && react-native run-android --no-packager --active-arch-only"
+  },
+  "dependencies": {
+    "@callstack/repack": "catalog:",
+    "@gluestack-ui/core": "catalog:",
+    "@gluestack-ui/utils": "catalog:",
+    "@react-navigation/native": "catalog:",
+    "@react-navigation/native-stack": "catalog:",
+    "@tractor/events": "workspace:*",
+    "@tractor/ui": "workspace:*",
+    "nativewind": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-native": "catalog:",
+    "react-native-css-interop": "catalog:",
+    "react-native-reanimated": "catalog:",
+    "react-native-safe-area-context": "catalog:",
+    "react-native-screens": "catalog:",
+    "react-native-svg": "catalog:",
+    "react-native-worklets": "catalog:"
+  },
+  "devDependencies": {
+    "@babel/core": "catalog:",
+    "@react-native-community/cli": "catalog:",
+    "@react-native-community/cli-platform-android": "catalog:",
+    "@react-native-community/cli-platform-ios": "catalog:",
+    "@react-native/babel-preset": "catalog:",
+    "@react-native/metro-config": "catalog:",
+    "@react-native/typescript-config": "catalog:",
+    "@tractor/config": "workspace:*",
+    "@types/react": "catalog:",
+    "eslint": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -9,18 +9,19 @@ build/
 tmp/
 coverage/
 
-# Android
-android/.gradle/
-android/app/build/
-android/build/
-android/local.properties
-android/app/release/
+# Android, anywhere under apps/
+**/android/.gradle/
+**/android/.kotlin/
+**/android/build/
+**/android/app/build/
+**/android/app/.cxx/
+**/android/local.properties
 *.keystore
 !debug.keystore
-.cxx/
 
-# iOS
-ios/Pods/
-ios/build/
+# iOS, anywhere under apps/
+**/ios/Pods/
+**/ios/build/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
+**/ios/.xcode.env.local

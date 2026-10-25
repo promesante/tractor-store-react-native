@@ -66,23 +66,23 @@ The task plan lives in [plan.md](./plan.md).
 
 ## 4. Decisions
 
-| Aspect            | Decision                                                                                                                  |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Framework         | React Native, bare workflow (no Expo). The exact version is pinned in the spike to one Re.Pack supports.                  |
-| Bundler           | Re.Pack 5 with Rspack, replacing Metro                                                                                    |
-| Micro frontends   | Module Federation 2 (`@module-federation/enhanced`) through Re.Pack                                                       |
-| Application shell | A thin host app: navigation container, remote loading, boundary toggle, providers                                         |
-| Integration       | Host loads remotes at runtime. Each remote exposes its screens and widgets.                                               |
-| Navigation        | React Navigation native stack in the host. Each team exports its screen list, like the sister project's routes.           |
-| Communication     | Typed event bus in `packages/events`, plus props from parent to child widget                                              |
-| UI library        | Gluestack UI with NativeWind, as shared singletons provided by the host                                                   |
-| Design system     | Shared Button in `packages/ui`, built on Gluestack                                                                        |
-| Cart state        | Owned by Checkout, persisted with AsyncStorage                                                                            |
-| Platforms         | Android first. The code stays cross-platform, and iOS is a later task.                                                    |
-| UI fidelity       | Mobile-adapted: same screens, data, images and team colors, in mobile idioms                                              |
-| Monorepo          | Turborepo with pnpm workspaces                                                                                            |
-| Hosting           | Cloudflare Workers with Static Assets, one Worker per team. Cloudflare Pages is in maintenance mode.                      |
-| CI/CD             | GitHub Actions: checks on every PR. On merge to `main`, deploy the changed remotes and build the host APK as an artifact. |
+| Aspect            | Decision                                                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Framework         | React Native 0.88, bare workflow (no Expo), with the versions Re.Pack's own test apps use. See [docs/spike.md](./docs/spike.md). |
+| Bundler           | Re.Pack 5.4 with Rspack 1.6.0, replacing Metro                                                                                   |
+| Micro frontends   | Module Federation 2 (`@module-federation/enhanced`) through Re.Pack                                                              |
+| Application shell | A thin host app: navigation container, remote loading, boundary toggle, providers                                                |
+| Integration       | Host loads remotes at runtime. Each remote exposes its screens and widgets.                                                      |
+| Navigation        | React Navigation native stack in the host. Each team exports its screen list, like the sister project's routes.                  |
+| Communication     | Typed event bus in `packages/events`, plus props from parent to child widget                                                     |
+| UI library        | Gluestack UI v3 on NativeWind 4 and Tailwind 3, as shared singletons provided by the host                                        |
+| Design system     | Shared Button in `packages/ui`, built on Gluestack                                                                               |
+| Cart state        | Owned by Checkout, persisted with AsyncStorage                                                                                   |
+| Platforms         | Android first. The code stays cross-platform, and iOS is a later task.                                                           |
+| UI fidelity       | Mobile-adapted: same screens, data, images and team colors, in mobile idioms                                                     |
+| Monorepo          | Turborepo with pnpm workspaces                                                                                                   |
+| Hosting           | Cloudflare Workers with Static Assets, one Worker per team. Cloudflare Pages is in maintenance mode.                             |
+| CI/CD             | GitHub Actions: checks on every PR. On merge to `main`, deploy the changed remotes and build the host APK as an artifact.        |
 
 ## 5. System boundaries
 
@@ -134,9 +134,15 @@ Each team Worker serves `mf-manifest.json`, its bundles and its images. It needs
 ### 6.3 Shared dependencies
 
 Shared as Module Federation singletons, provided eagerly by the host: `react`, `react-native`,
-React Navigation, Gluestack and NativeWind, AsyncStorage, `packages/events` and `packages/ui`.
-Versions must match exactly. A remote can't add native modules, so any library with native code
-goes into the host first.
+`react-dom`, React Navigation, Reanimated, Gluestack and NativeWind, AsyncStorage,
+`packages/events` and `packages/ui`. Versions must match exactly: each app reads them from its
+installed packages, which all come from the workspace catalog. A remote can't add native modules,
+so any library with native code goes into the host first.
+
+NativeWind and Gluestack are also shared by subpath, for example `react-native-css-interop/`,
+because their JSX runtime and style registry are imported through subpaths and must exist once.
+`react-dom` is there because React Aria, a Gluestack dependency, imports it even on native.
+The list lives in `packages/config/rspack.js`.
 
 ### 6.4 Communication
 
@@ -159,7 +165,8 @@ event bus.
 ### 6.6 Styling and assets
 
 - Gluestack components styled with NativeWind classes. Each remote compiles its own classes
-  through Re.Pack's NativeWind plugin.
+  through Re.Pack's NativeWind plugin and registers them in the shared NativeWind registry. The
+  Tailwind content of each app includes `packages/ui`, so shared components' classes are compiled too.
 - Team colors and the Raleway font follow the blueprint. Fonts are bundled in the host.
 - Product and store images are served by the owning team's Worker. No hotlinking to the blueprint host.
 - Boundary toggle: a floating switch in the host. When on, every team root draws a border in its
@@ -204,14 +211,15 @@ docs/            spike findings
 
 ## 11. Risks
 
-| Risk                                              | Why it matters                                                 | Mitigation                                                            |
-| ------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Re.Pack support for the latest React Native       | Re.Pack can lag behind React Native releases                   | Pick the newest version Re.Pack supports in the spike, and pin it     |
-| NativeWind and Gluestack inside federated remotes | Styles are compiled per bundle and must work in a remote       | Proved in the spike                                                   |
-| Singleton version drift                           | A mismatch crashes at runtime                                  | Exact pins from the workspace catalog, checked in CI                  |
-| Remote unavailable or slow on a phone network     | Screens wouldn't load                                          | Error fallback with retry per remote. Cached bundles later if needed. |
-| No Xcode on the dev machine                       | iOS can't be built or tested locally                           | Android first; iOS as a later task                                    |
-| App store policy on downloaded code               | Stores limit changing an app's purpose through downloaded code | Allowed for this kind of JS update; noted in the README               |
+| Risk                                              | Why it matters                                                 | Mitigation                                                                  |
+| ------------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Re.Pack support for the latest React Native       | Re.Pack can lag behind React Native releases                   | Resolved in the [spike](./docs/spike.md): pinned to Re.Pack's test versions |
+| NativeWind and Gluestack inside federated remotes | Styles are compiled per bundle and must work in a remote       | Resolved in the [spike](./docs/spike.md)                                    |
+| Singleton version drift                           | A mismatch crashes at runtime                                  | Exact pins from the workspace catalog, checked in CI                        |
+| Remote unavailable or slow on a phone network     | Screens wouldn't load                                          | Error fallback with retry per remote. Cached bundles later if needed.       |
+| No Xcode on the dev machine                       | iOS can't be built or tested locally                           | Android first; iOS as a later task                                          |
+| App store policy on downloaded code               | Stores limit changing an app's purpose through downloaded code | Allowed for this kind of JS update; noted in the README                     |
+| Gluestack v5 needs NativeWind 5                   | Re.Pack's NativeWind plugin supports NativeWind 4 only         | Stay on Gluestack v3 until NativeWind 5 is stable and Re.Pack supports it   |
 
 ## 12. Publishing to the Tractor Store site
 

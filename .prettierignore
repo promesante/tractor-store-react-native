@@ -5,3 +5,5 @@ pnpm-lock.yaml
 **/.wrangler/
 **/android/
 **/ios/
+# Copied from gluestack-ui unchanged, so they can be updated from upstream.
+packages/ui/src/gluestack/

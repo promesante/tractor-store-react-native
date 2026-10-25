@@ -6,10 +6,23 @@
   "exports": {
     "./eslint": "./eslint.js",
     "./tsconfig/base.json": "./tsconfig/base.json",
-    "./tsconfig/react-native.json": "./tsconfig/react-native.json"
+    "./tsconfig/react-native.json": "./tsconfig/react-native.json",
+    "./rspack": "./rspack.js",
+    "./babel": "./babel.cjs"
   },
   "dependencies": {
+    "@babel/plugin-transform-react-jsx": "catalog:",
+    "@callstack/repack": "catalog:",
+    "@callstack/repack-plugin-nativewind": "catalog:",
+    "@callstack/repack-plugin-reanimated": "catalog:",
     "@eslint/js": "catalog:",
+    "@module-federation/enhanced": "catalog:",
+    "@rspack/core": "catalog:",
+    "@swc/helpers": "catalog:",
+    "autoprefixer": "catalog:",
+    "eslint-plugin-react-hooks": "catalog:",
+    "postcss": "catalog:",
+    "postcss-loader": "catalog:",
     "typescript-eslint": "catalog:"
   },
   "peerDependencies": {

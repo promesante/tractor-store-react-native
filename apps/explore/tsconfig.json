@@ -1,0 +1,4 @@
+{
+  "extends": "@tractor/config/tsconfig/react-native.json",
+  "include": ["src"]
+}

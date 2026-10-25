@@ -14,7 +14,7 @@ Tasks for building the store described in [spec.md](./spec.md).
 | ---- | ------------------------------------------------- | ---------- | ------ |
 | T0   | Spec and plan                                     | none       | Done   |
 | T1   | Monorepo scaffold and CI                          | T0         | Review |
-| T2   | Spike: Re.Pack Module Federation with Gluestack   | T1         | Todo   |
+| T2   | Spike: Re.Pack Module Federation with Gluestack   | T1         | Review |
 | T3   | Host app: navigation, remote loading, fallbacks   | T2         | Todo   |
 | T4   | Cloudflare Workers and deploy workflow            | T3         | Todo   |
 | T5   | Shared UI: theme, Button, Boundary toggle         | T3         | Todo   |
@@ -64,6 +64,11 @@ Proves the open risks in [spec.md, section 11](./spec.md#11-risks) before featur
 - NativeWind classes styled in each remote render correctly.
 - Findings written to [docs/spike.md](./docs/spike.md): versions, what worked, what needed
   patching, and any change to the spec.
+
+- Versions follow Re.Pack's own test apps: React Native 0.88.0, Rspack 1.6.0, Module Federation
+  2.9.2. Gluestack v3 on NativeWind 4, because Gluestack v5 needs NativeWind 5.
+- `packages/config/rspack.js` holds the shared Re.Pack config and singleton list for every app.
+- `packages/ui` gets Gluestack's provider and Button, copied from gluestack-ui's `main-v3` branch.
 
 **Done when** the debug app on the Android emulator loads both remotes from their dev servers,
 the event reaches the widget, and a change in a remote shows after a reload without rebuilding the host.
