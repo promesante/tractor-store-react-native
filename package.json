@@ -13,7 +13,8 @@
     "lint:root": "prettier --check .",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "android": "pnpm --filter @tractor/host android"
   },
   "devDependencies": {
     "@tractor/config": "workspace:*",
